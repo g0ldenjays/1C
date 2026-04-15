@@ -28,7 +28,6 @@
 #define BOX_BLUE "\x1b[38;5;25m"
 #define BOX_RED "\x1b[38;5;124m"
 
-// Colores de fondo
 #define BG_RED "\x1b[41m"
 #define BG_GREEN "\x1b[42m"
 
