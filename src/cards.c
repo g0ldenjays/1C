@@ -118,7 +118,14 @@ void print_deck(Deck *deck)
     }
 }
 
-Card draw_card(Deck *deck) {
+/**
+ * @brief Obtiene una carta del mazo
+ * 
+ * @param deck Mazo
+ * @return Card Ultima carta del mazo
+ */
+Card draw_card(Deck *deck)
+{
     Card empty_card;
 
     if (deck->size <= 0) {
@@ -130,6 +137,14 @@ Card draw_card(Deck *deck) {
     return deck->cards[deck->size];
 }
 
+/**
+ * @brief Reparte las cartas del mazo en dos manos
+ * 
+ * @param deck Mazo
+ * @param hand1 Mano 1
+ * @param hand2 Mano 2
+ * @param hand_size Tamanho de mano //TODO: No se debe dejar fijo el tamaño de las manos
+ */
 void deal_cards(Deck *deck, Card hand1[], Card hand2[], int hand_size)
 {
     for (int i = 0; i < hand_size; i++) {
@@ -138,14 +153,33 @@ void deal_cards(Deck *deck, Card hand1[], Card hand2[], int hand_size)
     }
 }
 
-void print_hand(Card hand[], int hand_size)
+/**
+ * @brief Imprime las manos
+ * 
+ * @param hand Mano a imprimir
+ * @param hand_size Tamanho de la mano
+ */
+void print_hand_turn(Card hand[], int hand_size)
 {
     for (int i = 0; i < hand_size; i++) {
-        printf("%d ", hand[i].number);
-        printf(hand[i].color == COLOR_RED ? "Red" : hand[i].color == COLOR_YELLOW ? "Yellow" : hand[i].color == COLOR_GREEN ? "Green" : hand[i].color == COLOR_BLUE ? "Blue" : "None");
-        if (hand[i].type != CARD_NUMBER) {
-            printf(" %s ", hand[i].type == CARD_SKIP ? "Skip" : hand[i].type == CARD_REVERSE ? "Reverse" : hand[i].type == CARD_DRAW_TWO ? "Draw Two" : hand[i].type == CARD_WILD ? "Wild" : hand[i].type == CARD_WILD_DRAW_FOUR ? "Wild Draw Four" : "Wild Total");
-        }
-        printf("\n");
+        printf("   %d. ", i + 1);
+        print_card(hand[i]);
+    }
+    printf("\n");
+}
+
+/**
+ * @brief Imprime una carta
+ * 
+ * @param card Carta a imprimir
+ */
+void print_card(Card card)
+{
+    if (card.number != -1) {
+        printf("%d ", card.number);
+    }
+    printf(card.color == COLOR_RED ? "Red" : card.color == COLOR_YELLOW ? "Yellow" : card.color == COLOR_GREEN ? "Green" : card.color == COLOR_BLUE ? "Blue" : "None");
+    if (card.type != CARD_NUMBER) {
+        printf(" %s ", card.type == CARD_SKIP ? "Skip" : card.type == CARD_REVERSE ? "Reverse" : card.type == CARD_DRAW_TWO ? "Draw Two" : card.type == CARD_WILD ? "Wild" : card.type == CARD_WILD_DRAW_FOUR ? "Wild Draw Four" : "Wild Total");
     }
 }

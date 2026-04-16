@@ -1,24 +1,33 @@
 #include <stdio.h>
-#include "cards.h"
+#include "game.h"
 #include "utilities.h"
 
-int main(void) {
-    Deck deck;
-    Card player1[7];
-    Card player2[7];
+int main() {
 
-    srand(time(NULL));
+    GameState game;
+    int move;
 
-    generate_deck(&deck);
-    shuffle_deck(&deck);
-    deal_cards(&deck, player1, player2, 7);
+    init_game(&game);
 
-    printf("Cartas restantes en deck: %d\n\n", deck.size);
+    printf("Cartas restantes en deck: %d\n\n", game.deck.size);
 
-	printf("Cartas del jugador 1:\n");
-	print_hand(player1, 7);
-	printf("\n\n\nCartas del jugador 2:\n");
-	print_hand(player2, 7);
+    printf(DARK_YELLOW "Carta en mesa: " YELLOW);
+    print_card(game.topCard);
+    printf(RESET "\n");
+
+    printf("Te toca jugar, estas son tus cartas:\n");
+    print_hand_turn(game.player1, 7);
+
+    printf("Ingrese el numero de la carta que quieres jugar: ");
+    scanf("%d", &move);
+
+    if (validate_move(&game, game.player1[move - 1])) {
+        printf(DARK_GREEN "\nJuego terminado exitosamente\n" RESET);
+        return 0;
+    }
+
+    printf(DARK_RED "\nNo valido\n" RESET);
 
     return 0;
+
 }

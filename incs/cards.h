@@ -54,5 +54,6 @@ void print_deck(Deck *deck);
 void shuffle_deck(Deck *deck);
 Card draw_card(Deck *deck);
 void deal_cards(Deck *deck, Card hand1[], Card hand2[], int hand_size);
-void print_hand(Card hand[], int hand_size);
+void print_hand_turn(Card hand[], int hand_size);
+void print_card(Card card);
 #endif
