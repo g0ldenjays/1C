@@ -9,10 +9,12 @@
 #define CARDS_H
 
 #define DECK_SIZE 109
+#define MAX_HAND_SIZE 107
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <stdbool.h>
 
 typedef enum {
 	COLOR_RED,
@@ -39,21 +41,21 @@ typedef struct {
 } Card;
 
 typedef struct {
-    Card *cards;
-    int count;
-    int capacity;
-} Hand;
+	Card card;
+	bool valid;
+} HandSlot;
 
 typedef struct {
     Card cards[DECK_SIZE];
     int size;
 } Deck;
 
+void set_card(Card *card, CardType type, Color color, int number);
 void generate_deck(Deck *deck);
 void print_deck(Deck *deck);
 void shuffle_deck(Deck *deck);
-Card draw_card(Deck *deck);
-void deal_cards(Deck *deck, Card hand1[], Card hand2[], int hand_size);
-void print_hand_turn(Card hand[], int hand_size);
+
+void print_hand_turn(HandSlot hand[]);
 void print_card(Card card);
+void insertion_sort_hand(HandSlot hand[], int size);
 #endif

@@ -10,11 +10,11 @@
  * @param color Color de la carta
  * @param number Numero de la carta
  */
-static void set_card(Card *card, CardType type, Color color, int number) 
+void set_card(Card *card, CardType type, Color color, int number) 
 {
-    card->type = type;
-    card->color = color;
-    card->number = number;
+	card->type = type;
+	card->color = color;
+	card->number = number;
 }
 
 /**
@@ -25,9 +25,15 @@ static void set_card(Card *card, CardType type, Color color, int number)
  */
 static void swap_cards(Card *card1, Card *card2) 
 {
-    Card temp = *card1;
-    *card1 = *card2;
-    *card2 = temp;
+	Card temp = *card1;
+	*card1 = *card2;
+	*card2 = temp;
+}
+
+static void swap_handslots(HandSlot *a, HandSlot *b) {
+	HandSlot temp = *a;
+	*a = *b;
+	*b = temp;
 }
 
 /**
@@ -37,54 +43,54 @@ static void swap_cards(Card *card1, Card *card2)
  */
 void generate_deck(Deck *deck) 
 {
-    int i = 0;
+	int i = 0;
 
-    for (int color = COLOR_RED; color <= COLOR_BLUE; color++) {
-        
-        // Cartas numericas
-        set_card(&deck->cards[i], CARD_NUMBER, color, 0);
-        i++;
+	for (int color = COLOR_RED; color <= COLOR_BLUE; color++) {
+		
+		// Cartas numericas
+		set_card(&deck->cards[i], CARD_NUMBER, color, 0);
+		i++;
 
-        // x2 Cartas numericas
-        for (int number = 1; number <= 9; number++) {
-            for (int copy = 0; copy < 2; copy++) {
-                set_card(&deck->cards[i], CARD_NUMBER, color, number);
-                i++;
-            }
-        }
+		// x2 Cartas numericas
+		for (int number = 1; number <= 9; number++) {
+			for (int copy = 0; copy < 2; copy++) {
+				set_card(&deck->cards[i], CARD_NUMBER, color, number);
+				i++;
+			}
+		}
 
-        // Dos acciones por color
-        for (int copy = 0; copy < 2; copy++) {
-            set_card(&deck->cards[i], CARD_SKIP, color, -1);
-            i++;
-        }
+		// Dos acciones por color
+		for (int copy = 0; copy < 2; copy++) {
+			set_card(&deck->cards[i], CARD_SKIP, color, -1);
+			i++;
+		}
 
-        for (int copy = 0; copy < 2; copy++) {
-            set_card(&deck->cards[i], CARD_REVERSE, color, -1);
-            i++;
-        }
+		for (int copy = 0; copy < 2; copy++) {
+			set_card(&deck->cards[i], CARD_REVERSE, color, -1);
+			i++;
+		}
 
-        for (int copy = 0; copy < 2; copy++) {
-            set_card(&deck->cards[i], CARD_DRAW_TWO, color, -1);
-            i++;
-        }
-    }
+		for (int copy = 0; copy < 2; copy++) {
+			set_card(&deck->cards[i], CARD_DRAW_TWO, color, -1);
+			i++;
+		}
+	}
 
-    // Comodines: Cambio color, +4 y comodin total
-    for (int copy = 0; copy < 4; copy++) {
-        set_card(&deck->cards[i], CARD_WILD, COLOR_NONE, -1);
-        i++;
-    }
+	// Comodines: Cambio color, +4 y comodin total
+	for (int copy = 0; copy < 4; copy++) {
+		set_card(&deck->cards[i], CARD_WILD, COLOR_NONE, -1);
+		i++;
+	}
 
-    for (int copy = 0; copy < 4; copy++) {
-        set_card(&deck->cards[i], CARD_WILD_DRAW_FOUR, COLOR_NONE, -1);
-        i++;
-    }
+	for (int copy = 0; copy < 4; copy++) {
+		set_card(&deck->cards[i], CARD_WILD_DRAW_FOUR, COLOR_NONE, -1);
+		i++;
+	}
 
-    set_card(&deck->cards[i], CARD_WILD_TOTAL, COLOR_NONE, -1);
-    i++;
+	set_card(&deck->cards[i], CARD_WILD_TOTAL, COLOR_NONE, -1);
+	i++;
 
-    deck->size = i;
+	deck->size = i;
 }
 
 /**
@@ -94,11 +100,11 @@ void generate_deck(Deck *deck)
  */
 void shuffle_deck(Deck *deck) 
 {
-    int j;
-    for (int i = deck->size - 1; i > 0; i--) {
-        j = rand() % (i + 1);
-        swap_cards(&deck->cards[i], &deck->cards[j]);
-    }
+	int j;
+	for (int i = deck->size - 1; i > 0; i--) {
+		j = rand() % (i + 1);
+		swap_cards(&deck->cards[i], &deck->cards[j]);
+	}
 }
 
 /**
@@ -108,50 +114,16 @@ void shuffle_deck(Deck *deck)
  */
 void print_deck(Deck *deck) 
 {
-    for (int i = 0; i < deck->size; i++) {
-        printf("%d ", deck->cards[i].number);
-        printf(deck->cards[i].color == COLOR_RED ? "Red" : deck->cards[i].color == COLOR_YELLOW ? "Yellow" : deck->cards[i].color == COLOR_GREEN ? "Green" : deck->cards[i].color == COLOR_BLUE ? "Blue" : "None");
-        if (deck->cards[i].type != CARD_NUMBER) {
-            printf(" %s ", deck->cards[i].type == CARD_SKIP ? "Skip" : deck->cards[i].type == CARD_REVERSE ? "Reverse" : deck->cards[i].type == CARD_DRAW_TWO ? "Draw Two" : deck->cards[i].type == CARD_WILD ? "Wild" : deck->cards[i].type == CARD_WILD_DRAW_FOUR ? "Wild Draw Four" : "Wild Total");
-        }
-        printf("\n");
-    }
+	for (int i = 0; i < deck->size; i++) {
+		printf("%d ", deck->cards[i].number);
+		printf(deck->cards[i].color == COLOR_RED ? "Red" : deck->cards[i].color == COLOR_YELLOW ? "Yellow" : deck->cards[i].color == COLOR_GREEN ? "Green" : deck->cards[i].color == COLOR_BLUE ? "Blue" : "None");
+		if (deck->cards[i].type != CARD_NUMBER) {
+			printf(" %s ", deck->cards[i].type == CARD_SKIP ? "Skip" : deck->cards[i].type == CARD_REVERSE ? "Reverse" : deck->cards[i].type == CARD_DRAW_TWO ? "Draw Two" : deck->cards[i].type == CARD_WILD ? "Wild" : deck->cards[i].type == CARD_WILD_DRAW_FOUR ? "Wild Draw Four" : "Wild Total");
+		}
+		printf("\n");
+	}
 }
 
-/**
- * @brief Obtiene una carta del mazo
- * 
- * @param deck Mazo
- * @return Card Ultima carta del mazo
- */
-Card draw_card(Deck *deck)
-{
-    Card empty_card;
-
-    if (deck->size <= 0) {
-        set_card(&empty_card, CARD_WILD_TOTAL, COLOR_NONE, -1);
-        return empty_card;
-    }
-
-    deck->size--;
-    return deck->cards[deck->size];
-}
-
-/**
- * @brief Reparte las cartas del mazo en dos manos
- * 
- * @param deck Mazo
- * @param hand1 Mano 1
- * @param hand2 Mano 2
- * @param hand_size Tamanho de mano //TODO: No se debe dejar fijo el tamaño de las manos
- */
-void deal_cards(Deck *deck, Card hand1[], Card hand2[], int hand_size)
-{
-    for (int i = 0; i < hand_size; i++) {
-        hand1[i] = draw_card(deck);
-        hand2[i] = draw_card(deck);
-    }
-}
 
 /**
  * @brief Imprime las manos
@@ -159,13 +131,16 @@ void deal_cards(Deck *deck, Card hand1[], Card hand2[], int hand_size)
  * @param hand Mano a imprimir
  * @param hand_size Tamanho de la mano
  */
-void print_hand_turn(Card hand[], int hand_size)
+void print_hand_turn(HandSlot hand[])
 {
-    for (int i = 0; i < hand_size; i++) {
-        printf("   %d. ", i + 1);
-        print_card(hand[i]);
-    }
-    printf("\n");
+	for (int i = 0; i < MAX_HAND_SIZE; i++) {
+		printf("   %d. ", i + 1);
+		print_card(hand[i].card);
+		if (!hand[i+1].valid) {
+			break;
+		}
+	}
+	printf("\n");
 }
 
 /**
@@ -175,11 +150,23 @@ void print_hand_turn(Card hand[], int hand_size)
  */
 void print_card(Card card)
 {
-    if (card.number != -1) {
-        printf("%d ", card.number);
-    }
-    printf(card.color == COLOR_RED ? "Red" : card.color == COLOR_YELLOW ? "Yellow" : card.color == COLOR_GREEN ? "Green" : card.color == COLOR_BLUE ? "Blue" : "None");
-    if (card.type != CARD_NUMBER) {
-        printf(" %s ", card.type == CARD_SKIP ? "Skip" : card.type == CARD_REVERSE ? "Reverse" : card.type == CARD_DRAW_TWO ? "Draw Two" : card.type == CARD_WILD ? "Wild" : card.type == CARD_WILD_DRAW_FOUR ? "Wild Draw Four" : "Wild Total");
-    }
+	if (card.number != -1) {
+		printf("%d ", card.number);
+	}
+	printf(card.color == COLOR_RED ? "Red" : card.color == COLOR_YELLOW ? "Yellow" : card.color == COLOR_GREEN ? "Green" : card.color == COLOR_BLUE ? "Blue" : "None");
+	if (card.type != CARD_NUMBER) {
+		printf(" %s ", card.type == CARD_SKIP ? "Skip" : card.type == CARD_REVERSE ? "Reverse" : card.type == CARD_DRAW_TWO ? "Draw Two" : card.type == CARD_WILD ? "Wild" : card.type == CARD_WILD_DRAW_FOUR ? "Wild Draw Four" : "Wild Total");
+	}
 }
+
+//sorteamos manos por campo .valid == true
+void insertion_sort_hand(HandSlot *hand, int size) {
+	for (int i = 1; i < size; i++) {
+		for (int j = i; j > 0; j--) {
+			if (hand[j].valid < hand[j - 1].valid) {
+				swap_handslots(&hand[j], &hand[j - 1]);
+			}
+		}
+	}
+}
+

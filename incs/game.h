@@ -7,8 +7,8 @@
 
 typedef struct {
 	Deck deck;
-	Card player1[7];
-	Card player2[7];
+	HandSlot player1[MAX_HAND_SIZE];
+	HandSlot player2[MAX_HAND_SIZE];
 	Card topCard;
 	Color currentColor;
 	int currentPlayer;
@@ -16,5 +16,8 @@ typedef struct {
 
 void init_game(GameState *game);
 bool validate_move(GameState *game, Card move);
+int count_valid_cards(HandSlot hand[]);
+Card draw_card(GameState *game, HandSlot hand[]);
+void deal_cards(Deck *deck, HandSlot hand1[], HandSlot hand2[], int hand_size);
 
 #endif
