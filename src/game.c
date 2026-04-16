@@ -23,7 +23,7 @@ static Card draw_card_start(Deck *deck)
 
 Card draw_card(GameState *game, HandSlot hand[])
 {
-    insertion_sort_hand(hand, MAX_HAND_SIZE);
+    //insertion_sort_hand(hand, MAX_HAND_SIZE);
 
     for (int i = 0; i < MAX_HAND_SIZE; i++) {
         if (!hand[i].valid) {

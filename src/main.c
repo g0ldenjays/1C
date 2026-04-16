@@ -17,18 +17,20 @@ int main() {
 		printf(RESET "\n");
 
 		printf("Te toca jugar, estas son tus cartas:\n");
+		insertion_sort_hand(game.player1, MAX_HAND_SIZE);
 		print_hand_turn(game.player1);
 
 		printf("Ingrese el numero de la carta que quieres jugar, o 0 para sacar una carta: ");
 
 		// Se ingresa la carta
 		result = scanf("%d", &move);
-		while (result != 1 || move < 0 || move > count_valid_cards(game.player1)) {
+		while (result != 1 || move <= 0 || move > count_valid_cards(game.player1)) {
 			if (result != 1) {
 				printf("Entrada invalida. Debes ingresar un numero.\n");
 				while (getchar() != '\n');
 			}
 			else if (move == 0) {
+
 				drawn = draw_card(&game, game.player1);
 				printf("Sacaste la carta:  ");
 				print_card(drawn);
