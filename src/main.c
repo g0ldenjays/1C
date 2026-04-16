@@ -15,6 +15,25 @@ int main() {
 		printf(DARK_YELLOW "Carta en mesa: " YELLOW);
 		print_card(game.topCard);
 		printf(RESET "\n");
+		printf(DARK_GRAY "\t Color en mesa: " RESET);
+		switch (game.topCard.color) {
+			case COLOR_RED:
+				printf(LIGHT_RED "ROJO\n");
+				break;
+			case COLOR_YELLOW:
+				printf(YELLOW "AMARILLO\n");
+				break;
+			case COLOR_GREEN:
+				printf(LIGHT_GREEN "VERDE\n");
+				break;
+			case COLOR_BLUE:
+				printf(LIGHT_BLUE "AZUL\n");
+				break;
+			default:
+				printf("NADA\n");
+				break;
+		}
+		printf(RESET);
 
 		printf("Te toca jugar, estas son tus cartas:\n");
 		insertion_sort_hand(game.player1, MAX_HAND_SIZE);
@@ -48,17 +67,33 @@ int main() {
 
 		if (move != 0) {
 			if (!validate_move(&game, game.player1[move - 1].card)) {
-				printf(DARK_RED "\nERROR\n" RESET);
-				break;
+				printf("Estás intentando jugar: ");
+				print_card(game.player1[move - 1].card);
+				printf("\n");
+				printf(DARK_RED "\nCarta inválida. \n" RESET);
+				continue;
 			}
 		}
 
 		if (move != 0) {
 			game.player1[move - 1].valid = false;
-			game.topCard =  game.player1[move - 1].card;
+			game.topCard = game.player1[move - 1].card;
+			game.currentColor = game.topCard.color;
 			insertion_sort_hand(game.player1, MAX_HAND_SIZE);
+		
+			if (game.topCard.type == CARD_WILD) {
+				play_color_change(&game);
+			}
 		}
+
+		if (verify_win(&game) != 0) {
+			printf(BG_GREEN "El jugador %d gano!!!" RESET "\n", verify_win(&game));
+		}
+
 	}
+
+
+
 
 	printf(DARK_GREEN "\nJuego terminado exitosamente\n" RESET);
 	return 0;

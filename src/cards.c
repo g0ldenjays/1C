@@ -1,6 +1,5 @@
 #include "utilities.h"
 #include "cards.h"
-#include "cards.h"
 
 /**
  * @brief Setea una carta especifica
@@ -115,10 +114,9 @@ void shuffle_deck(Deck *deck)
 void print_deck(Deck *deck) 
 {
 	for (int i = 0; i < deck->size; i++) {
-		printf("%d ", deck->cards[i].number);
 		printf(deck->cards[i].color == COLOR_RED ? "Red" : deck->cards[i].color == COLOR_YELLOW ? "Yellow" : deck->cards[i].color == COLOR_GREEN ? "Green" : deck->cards[i].color == COLOR_BLUE ? "Blue" : "None");
 		if (deck->cards[i].type != CARD_NUMBER) {
-			printf(" %s ", deck->cards[i].type == CARD_SKIP ? "Skip" : deck->cards[i].type == CARD_REVERSE ? "Reverse" : deck->cards[i].type == CARD_DRAW_TWO ? "Draw Two" : deck->cards[i].type == CARD_WILD ? "Wild" : deck->cards[i].type == CARD_WILD_DRAW_FOUR ? "Wild Draw Four" : "Wild Total");
+			printf(" %s ", deck->cards[i].type == CARD_SKIP ? "Skip" : deck->cards[i].type == CARD_REVERSE ? "Reverse" : deck->cards[i].type == CARD_DRAW_TWO ? "Draw Two" : deck->cards[i].type == CARD_WILD ? "Wild" : deck->cards[i].type == CARD_WILD_DRAW_FOUR ? "Draw Four" : "Wild Total");
 		}
 		printf("\n");
 	}
@@ -151,13 +149,19 @@ void print_hand_turn(HandSlot hand[])
  */
 void print_card(Card card)
 {
+
+	//Se imprime primero con el color de la carta
+	printf(card.color == COLOR_RED ? LIGHT_RED : card.color == COLOR_YELLOW ? YELLOW : card.color == COLOR_GREEN ? LIGHT_GREEN : card.color == COLOR_BLUE ? LIGHT_BLUE : DARK_GRAY);
+
 	if (card.number != -1) {
 		printf("%d ", card.number);
 	}
-	printf(card.color == COLOR_RED ? "Red" : card.color == COLOR_YELLOW ? "Yellow" : card.color == COLOR_GREEN ? "Green" : card.color == COLOR_BLUE ? "Blue" : "None");
+
+	printf(card.color == COLOR_RED ? "Red" : card.color == COLOR_YELLOW ? "Yellow" : card.color == COLOR_GREEN ? "Green" : card.color == COLOR_BLUE ? "Blue" : "\b");
 	if (card.type != CARD_NUMBER) {
-		printf(" %s ", card.type == CARD_SKIP ? "Skip" : card.type == CARD_REVERSE ? "Reverse" : card.type == CARD_DRAW_TWO ? "Draw Two" : card.type == CARD_WILD ? "Wild" : card.type == CARD_WILD_DRAW_FOUR ? "Wild Draw Four" : "Wild Total");
+		printf(" %s ", card.type == CARD_SKIP ? "Skip" : card.type == CARD_REVERSE ? "Reverse" : card.type == CARD_DRAW_TWO ? "Draw Two" : card.type == CARD_WILD ? "Color Change" : card.type == CARD_WILD_DRAW_FOUR ? "Draw Four" : "Wild Total");
 	}
+	printf(RESET);
 }
 
 //sorteamos manos por campo .valid == true

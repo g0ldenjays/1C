@@ -101,7 +101,7 @@ bool validate_move(GameState *game, Card move) {
 		return true;
 	}
 
-	if (move.color == game->currentColor) {
+	if (move.color == game->topCard.color) {
 		return true;
 	}
 
@@ -113,6 +113,78 @@ bool validate_move(GameState *game, Card move) {
 		return true;
 	}
 
+	if ((move.type == CARD_DRAW_TWO) && (move.color == game->topCard.color)) {
+		return true;
+	}
+
+	if ((move.type == CARD_SKIP) && (move.color == game->topCard.color)) {
+		return true;
+	}
+
+	if ((move.type == CARD_REVERSE) && (move.color == game->topCard.color)) {
+		return true;
+	}
+
 	return false;
 
+}
+
+void play_color_change(GameState *game) {
+	int move, result;
+	printf("Elige un color:\n");
+	printf(LIGHT_RED "1) ROJO\n");
+	printf(YELLOW "2) AMARILLO\n");
+	printf(LIGHT_GREEN "3) VERDE\n");
+	printf(LIGHT_BLUE "4) AZUL\n");
+
+	while (1) {
+		result = scanf("%d", &move);
+		if (result != 1) {
+			printf("Entrada invalida. Reintenta:\n");
+			while (getchar() != '\n');
+			continue;
+		}
+
+		if (move < 1 || move > 4) {
+			printf("Numero invalido. Debe ser 1-4. Reintenta:\n");
+			continue;
+		}
+
+		game->currentColor = move - 1;
+		game->topCard.color = move - 1;
+		printf("Color cambiado a: ");
+		switch (game->currentColor) {
+			case COLOR_RED:
+				printf(LIGHT_RED "ROJO\n");	
+				break;
+			case COLOR_YELLOW:
+				printf(YELLOW "AMARILLO\n");
+				break;
+			case COLOR_GREEN:
+				printf(LIGHT_GREEN "VERDE\n");
+				break;
+			case COLOR_BLUE:
+				printf(LIGHT_BLUE "AZUL\n");
+				break;
+			default:
+				printf("%d\n", game->currentColor);
+				break;
+		}
+		break;
+	}
+}
+
+int verify_win(GameState *game) {
+	int count1 = count_valid_cards(game->player1);
+	int count2 = count_valid_cards(game->player2);
+
+	if (count1 == 0) {
+		return 1;
+	}
+	
+	if (count2 == 0) {
+		return 2;
+	}
+
+	return 0;
 }
