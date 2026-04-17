@@ -7,6 +7,7 @@
 
 typedef struct {
 	Deck deck;
+	Deck bin;
 	HandSlot player1[MAX_HAND_SIZE];
 	HandSlot player2[MAX_HAND_SIZE];
 	Card topCard;
@@ -20,6 +21,11 @@ int count_valid_cards(HandSlot hand[]);
 Card draw_card(GameState *game, HandSlot hand[]);
 void deal_cards(Deck *deck, HandSlot hand1[], HandSlot hand2[], int hand_size);
 void play_color_change(GameState *game);
+void play_draw_four(GameState *game);
+void play_draw_two(GameState *game);
 int verify_win(GameState *game);
+void stack_bin(GameState *game);
+void play_skip();
+void play_reverse();
 
 #endif

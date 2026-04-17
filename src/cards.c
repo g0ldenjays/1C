@@ -1,4 +1,5 @@
 #include "utilities.h"
+#include "game.h"
 #include "cards.h"
 
 /**
@@ -29,6 +30,12 @@ static void swap_cards(Card *card1, Card *card2)
 	*card2 = temp;
 }
 
+/**
+ * @brief Intercambia dos slots de mano
+ * 
+ * @param a Slot 1
+ * @param b Slot 2
+ */
 static void swap_handslots(HandSlot *a, HandSlot *b) {
 	HandSlot temp = *a;
 	*a = *b;

@@ -6,10 +6,24 @@ int main() {
 	GameState game;
 	Card drawn;
 	int move, result;
+	bool skip = false;
 
 	init_game(&game);
 
+	// Bucle principal de juego
 	while (true) {
+		
+		HandSlot *currentHand;
+		HandSlot *opponentHand;  
+
+		if (!skip) {
+			game.currentPlayer = (game.currentPlayer == 1) ? 2 : 1;
+			currentHand = (game.currentPlayer == 1) ? game.player1 : game.player2;
+			opponentHand = (game.currentPlayer == 1) ? game.player2 : game.player1;  
+		}
+		skip = false;
+		
+		// Prints del estado de juego
 		printf("Cartas restantes en deck: %d\n\n", game.deck.size);
 
 		printf(DARK_YELLOW "Carta en mesa: " YELLOW);
@@ -35,30 +49,31 @@ int main() {
 		}
 		printf(RESET);
 
-		printf("Te toca jugar, estas son tus cartas:\n");
-		insertion_sort_hand(game.player1, MAX_HAND_SIZE);
-		print_hand_turn(game.player1);
+
+		printf("Jugador %d, te toca jugar, estas son tus cartas:\n", game.currentPlayer);
+		insertion_sort_hand(currentHand, MAX_HAND_SIZE);
+		print_hand_turn(currentHand);
 
 		printf("Ingrese el numero de la carta que quieres jugar, o 0 para sacar una carta: ");
 
 		// Se ingresa la carta
 		result = scanf("%d", &move);
-		while (result != 1 || move <= 0 || move > count_valid_cards(game.player1)) {
+		while (result != 1 || move <= 0 || move > count_valid_cards(currentHand)) {
 			if (result != 1) {
 				printf("Entrada invalida. Debes ingresar un numero.\n");
 				while (getchar() != '\n');
 			}
 			else if (move == 0) {
-
-				drawn = draw_card(&game, game.player1);
+				drawn = draw_card(&game, currentHand);
 				printf("Sacaste la carta:  ");
 				print_card(drawn);
 				printf("\n");
+				printf("Pierdes tu turno\n");
 				break;
 			}
 			else {
 				printf("El numero debe estar entre 1 y %d, o 0 para sacar una carta\n",
-					count_valid_cards(game.player1));
+					count_valid_cards(currentHand));
 			}
 
 			printf("Ingrese el numero de la carta que quieres jugar: ");
@@ -66,9 +81,9 @@ int main() {
 		}
 
 		if (move != 0) {
-			if (!validate_move(&game, game.player1[move - 1].card)) {
+			if (!validate_move(&game, currentHand[move - 1].card)) {
 				printf("Estás intentando jugar: ");
-				print_card(game.player1[move - 1].card);
+				print_card(currentHand[move - 1].card);
 				printf("\n");
 				printf(DARK_RED "\nCarta inválida. \n" RESET);
 				continue;
@@ -76,18 +91,36 @@ int main() {
 		}
 
 		if (move != 0) {
-			game.player1[move - 1].valid = false;
-			game.topCard = game.player1[move - 1].card;
+			currentHand[move - 1].valid = false;
+			stack_bin(&game);
+			game.topCard = currentHand[move - 1].card;
 			game.currentColor = game.topCard.color;
-			insertion_sort_hand(game.player1, MAX_HAND_SIZE);
+			insertion_sort_hand(currentHand, MAX_HAND_SIZE);
 		
-			if (game.topCard.type == CARD_WILD) {
-				play_color_change(&game);
+			switch (game.topCard.type) {
+				case CARD_WILD:
+					play_color_change(&game);
+					break;
+				case CARD_WILD_DRAW_FOUR:
+					play_draw_four(&game);
+					print_hand_turn(opponentHand);
+					break;
+				case CARD_DRAW_TWO:
+					play_draw_two(&game);
+					print_hand_turn(opponentHand);
+					break;
+				case CARD_SKIP:
+				case CARD_REVERSE:
+					skip = true;
+					break;
+				default:
+					break;
 			}
 		}
 
 		if (verify_win(&game) != 0) {
 			printf(BG_GREEN "El jugador %d gano!!!" RESET "\n", verify_win(&game));
+			break;
 		}
 
 	}

@@ -43,7 +43,7 @@ Card draw_card(GameState *game, HandSlot hand[])
  * @param deck Mazo
  * @param hand1 Mano 1
  * @param hand2 Mano 2
- * @param hand_size Tamanho de mano //TODO: No se debe dejar fijo el tamaño de las manos
+ * @param hand_size Tamanho de mano
  */
 void deal_cards(Deck *deck, HandSlot hand1[], HandSlot hand2[], int hand_size)
 {
@@ -57,13 +57,26 @@ void deal_cards(Deck *deck, HandSlot hand1[], HandSlot hand2[], int hand_size)
 }
 
 /**
+ * @brief Guarda las cartas pasadas en el mazo de la bin para poder volverlas
+ * 
+ * @param game Juego
+ * @param bin Mazo de reserva
+ */
+void stack_bin(GameState *game)
+{
+	game->bin.cards[game->bin.size] = game->topCard;
+	game->bin.size++;
+}
+
+/**
  * @brief Inicializa el estado del juego
  * 
  * @param game Variable de estado del juego
  * @param player1 mano de jugador 1
  * @param player2 mano de jugador 2
  */
-void init_game(GameState *game) {
+void init_game(GameState *game)
+{
 	
 	srand(time(NULL));
 	generate_deck(&game->deck);
@@ -80,10 +93,19 @@ void init_game(GameState *game) {
 	game->currentColor = game->topCard.color;
 	game->currentPlayer = 0;
 
+	game->bin.size = 0;
+
 	return;
 }
 
-int count_valid_cards(HandSlot hand[]) {
+/**
+ * @brief Cuenta el numero de cartas validos en una mano
+ * 
+ * @param hand Mano de jugador
+ * @return int Cantidad de cartas validas
+ */
+int count_valid_cards(HandSlot hand[])
+{
 
 	int count = 0;
 	for (int i = 0; i < MAX_HAND_SIZE; i++) {
@@ -95,7 +117,16 @@ int count_valid_cards(HandSlot hand[]) {
 	return count;	
 }
 
-bool validate_move(GameState *game, Card move) {
+/**
+ * @brief Valida si un movimiento es valido
+ * 
+ * @param game Juego
+ * @param move carta que se va a jugar
+ * @return true Valido
+ * @return false No valido
+ */
+bool validate_move(GameState *game, Card move)
+{
 
 	if ((move.type == CARD_WILD) || (move.type == CARD_WILD_DRAW_FOUR) || (move.type == CARD_WILD_TOTAL)) {
 		return true;
@@ -113,7 +144,7 @@ bool validate_move(GameState *game, Card move) {
 		return true;
 	}
 
-	if ((move.type == CARD_DRAW_TWO) && (move.color == game->topCard.color)) {
+	if ((move.type == CARD_DRAW_TWO) && ((move.color == game->topCard.color) || (game->topCard.type == CARD_DRAW_TWO))) {
 		return true;
 	}
 
@@ -129,7 +160,13 @@ bool validate_move(GameState *game, Card move) {
 
 }
 
-void play_color_change(GameState *game) {
+/**
+ * @brief Cambia el color en mesa
+ * 
+ * @param game Juego
+ */
+void play_color_change(GameState *game)
+{
 	int move, result;
 	printf("Elige un color:\n");
 	printf(LIGHT_RED "1) ROJO\n");
@@ -174,7 +211,82 @@ void play_color_change(GameState *game) {
 	}
 }
 
-int verify_win(GameState *game) {
+//esta funcion maldita
+/**
+ * @brief Le da +4 cartas al oponente y cambia de color
+ * 
+ * @param game Juego
+ */
+void play_draw_four(GameState *game)
+{
+	HandSlot *targetHand;
+
+	// Determina jugador afectado
+	if (game->currentPlayer == 1) {
+		targetHand = game->player2;
+	} else {
+		targetHand = game->player1;
+	}
+
+	for (int i = 0; i < 4; i++) {
+		draw_card(game, targetHand);
+	}
+
+	//Cambia color
+	play_color_change(game);
+}
+
+/**
+ * @brief Le da +2 cartas al oponente
+ * 
+ * @param game Juego
+ */
+void play_draw_two(GameState *game)
+{
+
+	HandSlot *targetHand;
+
+	// Determina jugador afectado
+	if (game->currentPlayer == 1) {
+		targetHand = game->player2;
+	} else {
+		targetHand = game->player1;
+	}
+
+	for (int i = 0; i < 2; i++) {
+		draw_card(game, targetHand);
+	}
+
+}
+
+/**
+ * @brief Cambia el flujo de turnos
+ * 
+ * @param game Juego
+ */
+void play_reverse()
+{
+	// en futura update cuando se añadan mas jugadores xD
+}
+
+/**
+ * @brief Cambia el orden de los turnos
+ * 
+ * @param game Juego
+ */
+void play_change_direction()
+{
+	// en futura update cuando se añadan mas jugadores xD
+}
+
+/**
+ * @brief Verifica si el juego ha terminado
+ * 
+ * @param game Juego
+ * @return int Cual jugador gano
+ */
+int verify_win(GameState *game)
+{
 	int count1 = count_valid_cards(game->player1);
 	int count2 = count_valid_cards(game->player2);
 
