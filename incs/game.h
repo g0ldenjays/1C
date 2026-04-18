@@ -21,8 +21,8 @@ bool validate_move(GameState *game, Card move);
 int count_valid_cards(HandSlot hand[]);
 Card draw_card(GameState *game, HandSlot hand[]);
 void deal_cards(Deck *deck, HandSlot hand1[], HandSlot hand2[], int hand_size);
-void play_color_change(GameState *game);
-void play_draw_four(GameState *game);
+void play_color_change(GameState *game, Color chosenColor);
+void play_draw_four(GameState *game, Color chosenColor);
 void play_draw_two(GameState *game);
 int verify_win(GameState *game);
 void stack_bin(GameState *game);
@@ -31,6 +31,6 @@ void play_reverse();
 void shuffle_bin(GameState *game);
 void stack_bin(GameState *game);
 void bin_to_deck(GameState *game);
-bool play_card_logic(GameState *game, int move, HandSlot *currentHand);
+bool play_card_logic(GameState *game, int move, HandSlot *currentHand, Color chosenColor);
 
 #endif

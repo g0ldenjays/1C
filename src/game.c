@@ -177,9 +177,12 @@ bool validate_move(GameState *game, Card move)
  * 
  * @param game Juego
  */
-void play_color_change(GameState *game)
+void play_color_change(GameState *game, Color chosenColor)
 {
-	int move, result;
+	game->currentColor = chosenColor;
+	game->topCard.color = chosenColor;
+
+	/*int move, result;
 	printf("Elige un color:\n");
 	printf(LIGHT_RED "1) ROJO\n");
 	printf(YELLOW "2) AMARILLO\n");
@@ -220,7 +223,7 @@ void play_color_change(GameState *game)
 				break;
 		}
 		break;
-	}
+	}*/
 }
 
 //esta funcion maldita
@@ -229,7 +232,7 @@ void play_color_change(GameState *game)
  * 
  * @param game Juego
  */
-void play_draw_four(GameState *game)
+void play_draw_four(GameState *game, Color chosenColor)
 {
 	HandSlot *targetHand;
 
@@ -245,7 +248,7 @@ void play_draw_four(GameState *game)
 	}
 
 	//Cambia color
-	play_color_change(game);
+	play_color_change(game, chosenColor);
 }
 
 /**
@@ -313,7 +316,7 @@ int verify_win(GameState *game)
 	return 0;
 }
 
-bool play_card_logic(GameState *game, int move, HandSlot *currentHand)
+bool play_card_logic(GameState *game, int move, HandSlot *currentHand, Color chosenColor)
 {
 	if (move != 0) {
 		currentHand[move - 1].valid = false;
@@ -325,10 +328,11 @@ bool play_card_logic(GameState *game, int move, HandSlot *currentHand)
 
 		switch (game->topCard.type) {
 			case CARD_WILD:
-				play_color_change(game);
+			case CARD_WILD_TOTAL:
+				play_color_change(game, chosenColor);
 				break;
 			case CARD_WILD_DRAW_FOUR:
-				play_draw_four(game);
+				play_draw_four(game, chosenColor);
 				return true;
 			case CARD_DRAW_TWO:
 				play_draw_two(game);

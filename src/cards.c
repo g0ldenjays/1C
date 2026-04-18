@@ -181,3 +181,145 @@ void insertion_sort_hand(HandSlot *hand) {
 	}
 }
 
+void print_card_ascii(Card card)
+{
+	if (card.color != COLOR_NONE) {
+		printf(card.color == COLOR_RED ? LIGHT_RED : card.color == COLOR_YELLOW ? YELLOW : card.color == COLOR_GREEN ? LIGHT_GREEN : LIGHT_BLUE);
+
+		printf("╔═════════╗\n");
+
+		if (card.type == CARD_NUMBER) {
+			switch (card.number) {
+				case 0:
+					printf("║   ▄▄▄   ║\n");
+					printf("║  █   █  ║\n");
+					printf("║  █   █  ║\n");
+					printf("║  █   █  ║\n");
+					printf("║   ▀▀▀   ║\n");
+					break;
+				case 1:
+					printf("║   ▄█    ║\n");
+					printf("║  ▀ █    ║\n");
+					printf("║    █    ║\n");                                                                            
+					printf("║    █    ║\n");
+					printf("║  ▄▄█▄▄  ║\n");
+					break;                                                                                              
+				case 2:
+					printf("║  ▄▀▀▀▄  ║\n");
+					printf("║      █  ║\n");
+					printf("║    ▄▀   ║\n");
+					printf("║  ▄▀     ║\n");
+					printf("║  █▄▄▄▄  ║\n");
+					break;
+				case 3:
+					printf("║  ▀▀▀▀█  ║\n");
+					printf("║    ▄▀   ║\n");
+					printf("║     ▀▄  ║\n");
+					printf("║      █  ║\n");
+					printf("║  ▀▄▄▄▀  ║\n");
+					break;
+				case 4:
+					printf("║     ▄█  ║\n");
+					printf("║   ▄▀ █  ║\n");
+					printf("║ ▄▀   █  ║\n");
+					printf("║  ▀▀▀▀█  ║\n");
+					printf("║      █  ║\n");                                                                            
+					break;
+				case 5:                                                                                                     
+					printf("║  ▄▄▄▄▄  ║\n");
+					printf("║  █      ║\n");
+					printf("║  ▀▀▀▀▄  ║\n");
+					printf("║      █  ║\n");
+					printf("║  ▀▀▀▀   ║\n");
+					break;
+				case 6:
+					printf("║  ▄▀▀▀▀  ║\n");
+					printf("║  █      ║\n");
+					printf("║  █▀▀▀▄  ║\n");
+					printf("║  █   █  ║\n");
+					printf("║  ▀▄▄▄▀  ║\n");
+					break;
+				case 7:
+					printf("║  ▀▀▀▀▀█ ║\n");
+					printf("║      ▄▀ ║\n");
+					printf("║     ▄▀  ║\n");
+					printf("║    ▄▀   ║\n");
+					printf("║    █    ║\n");
+					break;
+				case 8:
+					printf("║  ▄▀▀▀▄  ║\n");
+					printf("║  █   █  ║\n");
+					printf("║  ▄▀▀▀▄  ║\n");
+					printf("║  █   █  ║\n");
+					printf("║  ▀▄▄▄▀  ║\n");                                                                            
+					break;
+				case 9:                                                                                                     
+					printf("║  ▄▀▀▀▄  ║\n");
+					printf("║  █   █  ║\n");
+					printf("║   ▀▀▀█  ║\n");
+					printf("║      █  ║\n");
+					printf("║   ▄▄▄▀  ║\n");
+					break;
+				default:
+					break;
+			}
+		} else {
+			switch (card.type) {
+				case CARD_SKIP:
+					printf("║ █▀▀▀▀██ ║\n");
+					printf("║ █   █ █ ║\n");
+					printf("║ █  █  █ ║\n");
+					printf("║ █ █   █ ║\n");
+					printf("║ ██▄▄▄▄█ ║\n");
+					break;
+				case CARD_DRAW_TWO:
+					printf("║ ▄█▄     ║\n");
+					printf("║  ▀  ▄▄  ║\n");
+					printf("║    ▀  █ ║\n");
+					printf("║     ▄▀  ║\n");
+					printf("║    ▀▀▀▀ ║\n");
+					break;
+				case CARD_REVERSE:
+					printf("║   ▄▄▄█▄ ║\n");
+					printf("║ ▄▀   ▀  ║\n");
+					printf("║ ███████ ║\n");
+					printf("║  ▄   ▄▀ ║\n");
+					printf("║ ▀█▀▀▀   ║\n");
+					break;
+				default:
+					break;
+			}
+		}
+
+		printf("╚═════════╝" RESET "\n");
+	} else {
+		printf(DARK_GRAY "╔═════════╗\n");
+		switch (card.type) {
+			case CARD_WILD:
+				printf("║" LIGHT_RED " ▄▄▄ " YELLOW "▄▄▄" DARK_GRAY " ║\n");
+				printf("║" LIGHT_RED " ███ " YELLOW "███" DARK_GRAY " ║\n");
+				printf("║         ║\n");
+				printf("║" LIGHT_GREEN " ███ " LIGHT_BLUE "███" DARK_GRAY " ║\n");
+				printf("║" LIGHT_GREEN " ▀▀▀ " LIGHT_BLUE "▀▀▀" DARK_GRAY " ║\n");
+				break;
+			case CARD_WILD_DRAW_FOUR:
+				printf("║" WHITE " ▄█▄     " DARK_GRAY "║\n");
+				printf("║" WHITE "  ▀   ▄█ " DARK_GRAY "║\n");
+				printf("║" WHITE "    ▄▀ █ " DARK_GRAY "║\n");
+				printf("║" LIGHT_RED " ▄" YELLOW "▄" WHITE " ▀▀▀█ " DARK_GRAY "║\n");
+				printf("║" LIGHT_GREEN " ▀" LIGHT_BLUE "▀    " WHITE "▀ " DARK_GRAY "║\n");
+				break;
+			case CARD_WILD_TOTAL:
+				printf("║         ║\n");
+				printf("║         ║\n");
+				printf("║         ║\n");
+				printf("║         ║\n");
+				printf("║         ║\n");
+				break;
+			default:
+				break;
+		}
+		printf(DARK_GRAY "╚═════════╝" RESET "\n");
+	}
+	return;
+}

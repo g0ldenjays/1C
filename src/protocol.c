@@ -9,11 +9,11 @@
 char *color_to_net(Color color)
 {
 	switch (color) {
-		case COLOR_RED: return (LIGHT_RED "RED" RESET);
-		case COLOR_YELLOW: return (YELLOW "YELLOW" RESET);
-		case COLOR_GREEN: return (LIGHT_GREEN "GREEN" RESET);
-		case COLOR_BLUE: return (LIGHT_BLUE "BLUE" RESET);
-		default: return "NADA";
+		case COLOR_RED: return "RED";
+		case COLOR_YELLOW: return "YELLOW";
+		case COLOR_GREEN: return "GREEN";
+		case COLOR_BLUE: return "BLUE";
+		default: return "NONE";
 	}
 }
 
@@ -76,19 +76,20 @@ int send_state_to_client(int sockfd, GameState *game, HandSlot hand[])
 	if (send_line(sockfd, line) < 0)
 		return -1;
 
+	
 	for (int i = 0; i < MAX_HAND_SIZE; i++) {
 		if (!hand[i].valid)
 			continue;
 
 		if (hand[i].card.type == CARD_NUMBER) {
-			snprintf(line, sizeof(line), "CARD %s %s %d",
-				type_to_net(hand[i].card.type),
+			snprintf(line, sizeof(line),"\t %d) %s %s %d", i + 1,
 				color_to_net(hand[i].card.color),
+				type_to_net(hand[i].card.type),
 				hand[i].card.number);
 		} else {
-			snprintf(line, sizeof(line), "CARD %s %s",
-				type_to_net(hand[i].card.type),
-				color_to_net(hand[i].card.color));
+			snprintf(line, sizeof(line), "\t %d) %s %s", i + 1,
+				color_to_net(hand[i].card.color),
+				type_to_net(hand[i].card.type));
 		}
 
 		if (send_line(sockfd, line) < 0)
@@ -137,4 +138,37 @@ int send_wait(int sockfd)
 int recv_command(int sockfd, char *buffer, size_t max_len)
 {
 	return recv_line(sockfd, buffer, max_len);
+}
+
+/**
+ * @brief Convierte un string de caracteres a un color
+ * 
+ * @param text Texto a convertir
+ * @return Color Texto convertido
+ */
+Color color_from_net(char *text)
+{
+	if (strcmp(text, "RED") == 0) return COLOR_RED;
+	if (strcmp(text, "YELLOW") == 0) return COLOR_YELLOW;
+	if (strcmp(text, "GREEN") == 0) return COLOR_GREEN;
+	if (strcmp(text, "BLUE") == 0) return COLOR_BLUE;
+	return COLOR_NONE;
+}
+
+/**
+ * @brief Convierte un string de caracteres a un tipo de carta
+ * 
+ * @param text Texto a convertir
+ * @return CardType Tipo de carta convertido
+ */
+CardType type_from_net(char *text)
+{
+	if (strcmp(text, "NUMBER") == 0) return CARD_NUMBER;
+	if (strcmp(text, "SKIP") == 0) return CARD_SKIP;
+	if (strcmp(text, "REVERSE") == 0) return CARD_REVERSE;
+	if (strcmp(text, "DRAW_TWO") == 0) return CARD_DRAW_TWO;
+	if (strcmp(text, "WILD") == 0) return CARD_WILD;
+	if (strcmp(text, "WILD_DRAW_FOUR") == 0) return CARD_WILD_DRAW_FOUR;
+	if (strcmp(text, "WILD_TOTAL") == 0) return CARD_WILD_TOTAL;
+	return CARD_NUMBER;
 }

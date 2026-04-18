@@ -14,4 +14,7 @@ int send_wait(int sockfd);
 
 int recv_command(int sockfd, char *buffer, size_t max_len);
 
+Color color_from_net(char *text);
+CardType type_from_net(char *text);
+
 #endif

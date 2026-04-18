@@ -60,4 +60,5 @@ void print_card(Card card);
 void insertion_sort_hand(HandSlot hand[]);
 void swap_cards(Card *card1, Card *card2);
 void swap_handslots(HandSlot *a, HandSlot *b);
+void print_card_ascii(Card card);
 #endif
