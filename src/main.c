@@ -14,12 +14,10 @@ int main() {
 	while (true) {
 		
 		HandSlot *currentHand;
-		HandSlot *opponentHand;  
 
 		if (!skip) {
 			game.currentPlayer = (game.currentPlayer == 1) ? 2 : 1;
-			currentHand = (game.currentPlayer == 1) ? game.player1 : game.player2;
-			opponentHand = (game.currentPlayer == 1) ? game.player2 : game.player1;  
+			currentHand = (game.currentPlayer == 1) ? game.player1 : game.player2; 
 		}
 		skip = false;
 		
@@ -51,7 +49,7 @@ int main() {
 
 
 		printf("Jugador %d, te toca jugar, estas son tus cartas:\n", game.currentPlayer);
-		insertion_sort_hand(currentHand, MAX_HAND_SIZE);
+		insertion_sort_hand(currentHand);
 		print_hand_turn(currentHand);
 
 		printf("Ingrese el numero de la carta que quieres jugar, o 0 para sacar una carta: ");
@@ -67,9 +65,6 @@ int main() {
 				drawn = draw_card(&game, currentHand);
 				printf("Sacaste la carta:  ");
 				print_card(drawn);
-				if (game.deck.size == 0) {
-					bin_to_deck(&game);
-				}
 				printf("\nPierdes tu turno\n");
 				break;
 			}
@@ -92,33 +87,7 @@ int main() {
 			}
 		}
 
-		if (move != 0) {
-			currentHand[move - 1].valid = false;
-			stack_bin(&game);
-			game.topCard = currentHand[move - 1].card;
-			game.currentColor = game.topCard.color;
-			insertion_sort_hand(currentHand, MAX_HAND_SIZE);
-		
-			switch (game.topCard.type) {
-				case CARD_WILD:
-					play_color_change(&game);
-					break;
-				case CARD_WILD_DRAW_FOUR:
-					play_draw_four(&game);
-					print_hand_turn(opponentHand);
-					break;
-				case CARD_DRAW_TWO:
-					play_draw_two(&game);
-					print_hand_turn(opponentHand);
-					break;
-				case CARD_SKIP:
-				case CARD_REVERSE:
-					skip = true;
-					break;
-				default:
-					break;
-			}
-		}
+		skip = play_card_logic(&game, move, currentHand, skip);
 
 		if (verify_win(&game) != 0) {
 			printf(BG_GREEN "El jugador %d gano!!!" RESET "\n", verify_win(&game));
@@ -126,9 +95,6 @@ int main() {
 		}
 
 	}
-
-
-
 
 	printf(DARK_GREEN "\nJuego terminado exitosamente\n" RESET);
 	return 0;

@@ -139,13 +139,11 @@ void print_deck(Deck *deck)
  */
 void print_hand_turn(HandSlot hand[])
 {
-	for (int i = 0; i < MAX_HAND_SIZE; i++) {
+	int total = count_valid_cards(hand);
+	for (int i = 0; i < total; i++) {
 		printf("   %d. ", i + 1);
 		print_card(hand[i].card);
 		printf("\n");
-		if (!hand[i+1].valid) {
-			break;
-		}
 	}
 	printf("\n");
 }
@@ -173,8 +171,8 @@ void print_card(Card card)
 }
 
 //sorteamos manos por campo .valid == true
-void insertion_sort_hand(HandSlot *hand, int size) {
-	for (int i = 1; i < size; i++) {
+void insertion_sort_hand(HandSlot *hand) {
+	for (int i = 1; i < MAX_HAND_SIZE; i++) {
 		for (int j = i; j > 0; j--) {
 			if (hand[j].valid > hand[j - 1].valid) {
 				swap_handslots(&hand[j], &hand[j - 1]);

@@ -23,6 +23,10 @@ Card draw_card(GameState *game, HandSlot hand[])
 {
     //insertion_sort_hand(hand, MAX_HAND_SIZE);
 
+	if (game->deck.size == 0) {
+		bin_to_deck(game);
+	}
+
     for (int i = 0; i < MAX_HAND_SIZE; i++) {
         if (!hand[i].valid) {
             hand[i].card = draw_card_start(&game->deck);
@@ -31,8 +35,7 @@ Card draw_card(GameState *game, HandSlot hand[])
         }
     }
 
-	printf("No hay cartas disponibles\n");
-	exit(1);
+	return hand[0].card;
 }
 
 /**
@@ -148,7 +151,7 @@ bool validate_move(GameState *game, Card move)
 	if ((move.type == CARD_WILD) || (move.type == CARD_WILD_DRAW_FOUR) || (move.type == CARD_WILD_TOTAL)) return true;
 
 	// Mismo color
-	if (move.color == game->topCard.color) return true;
+	if (move.color == game->currentColor) return true;
 
 	// Mismo numero
 	if (((move.type == CARD_NUMBER) && (game->topCard.type == CARD_NUMBER)) && (game->topCard.number == move.number)) return true;
@@ -157,13 +160,13 @@ bool validate_move(GameState *game, Card move)
 	if (((move.type != CARD_NUMBER) && (game->topCard.type != CARD_NUMBER)) && (move.type == game->topCard.type)) return true;
 
 	// Encadenar +2
-	if ((move.type == CARD_DRAW_TWO) && ((move.color == game->topCard.color) || (game->topCard.type == CARD_DRAW_TWO))) return true;
+	if ((move.type == CARD_DRAW_TWO) && ((move.color == game->currentColor) || (game->topCard.type == CARD_DRAW_TWO))) return true;
 
 	// Saltar
-	if ((move.type == CARD_SKIP) && (move.color == game->topCard.color)) return true;
+	if ((move.type == CARD_SKIP) && (move.color == game->currentColor)) return true;
 
 	// Invertir
-	if ((move.type == CARD_REVERSE) && (move.color == game->topCard.color)) return true;
+	if ((move.type == CARD_REVERSE) && (move.color == game->currentColor)) return true;
 
 	return false;
 
@@ -308,4 +311,35 @@ int verify_win(GameState *game)
 	}
 
 	return 0;
+}
+
+bool play_card_logic(GameState *game, int move, HandSlot *currentHand, bool skip)
+{
+	if (move != 0) {
+		currentHand[move - 1].valid = false;
+		stack_bin(game);
+		game->topCard = currentHand[move - 1].card;
+		game->currentColor = game->topCard.color;
+		insertion_sort_hand(currentHand);
+		
+
+		switch (game->topCard.type) {
+			case CARD_WILD:
+				play_color_change(game);
+				break;
+			case CARD_WILD_DRAW_FOUR:
+				play_draw_four(game);
+				return true;
+			case CARD_DRAW_TWO:
+				play_draw_two(game);
+				return true;
+			case CARD_SKIP:
+			case CARD_REVERSE:
+				return true;
+			default:
+				break;
+		}
+	}
+
+	return skip;
 }
