@@ -67,8 +67,10 @@ int main() {
 				drawn = draw_card(&game, currentHand);
 				printf("Sacaste la carta:  ");
 				print_card(drawn);
-				printf("\n");
-				printf("Pierdes tu turno\n");
+				if (game.deck.size == 0) {
+					bin_to_deck(&game);
+				}
+				printf("\nPierdes tu turno\n");
 				break;
 			}
 			else {

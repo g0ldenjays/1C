@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include "utilities.h"
 #include "cards.h"
 
 typedef struct {
@@ -27,5 +28,8 @@ int verify_win(GameState *game);
 void stack_bin(GameState *game);
 void play_skip();
 void play_reverse();
+void shuffle_bin(GameState *game);
+void stack_bin(GameState *game);
+void bin_to_deck(GameState *game);
 
 #endif

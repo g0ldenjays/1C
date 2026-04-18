@@ -58,4 +58,6 @@ void shuffle_deck(Deck *deck);
 void print_hand_turn(HandSlot hand[]);
 void print_card(Card card);
 void insertion_sort_hand(HandSlot hand[], int size);
+void swap_cards(Card *card1, Card *card2);
+void swap_handslots(HandSlot *a, HandSlot *b);
 #endif

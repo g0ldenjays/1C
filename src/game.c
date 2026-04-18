@@ -1,6 +1,4 @@
 #include "game.h"
-#include "utilities.h"
-
 
 /**
  * @brief Obtiene una carta del mazo, util al inicio del juego, para un robo mas completo usar draw_card()
@@ -68,6 +66,24 @@ void stack_bin(GameState *game)
 	game->bin.size++;
 }
 
+void shuffle_bin(GameState *game)
+{
+	for (int i = game->bin.size - 1; i > 0; i--) {
+		swap_cards(&game->bin.cards[i], &game->bin.cards[rand() % (i + 1)]);
+	}
+}
+
+void bin_to_deck(GameState *game)
+{
+	if (game->bin.size == 0) {
+		return;
+	}
+
+	shuffle_bin(game);
+	game->deck = game->bin;
+	game->bin.size = 0;
+}
+
 /**
  * @brief Inicializa el estado del juego
  * 
@@ -128,33 +144,26 @@ int count_valid_cards(HandSlot hand[])
 bool validate_move(GameState *game, Card move)
 {
 
-	if ((move.type == CARD_WILD) || (move.type == CARD_WILD_DRAW_FOUR) || (move.type == CARD_WILD_TOTAL)) {
-		return true;
-	}
+	// Comodin
+	if ((move.type == CARD_WILD) || (move.type == CARD_WILD_DRAW_FOUR) || (move.type == CARD_WILD_TOTAL)) return true;
 
-	if (move.color == game->topCard.color) {
-		return true;
-	}
+	// Mismo color
+	if (move.color == game->topCard.color) return true;
 
-	if (((move.type == CARD_NUMBER) && (game->topCard.type == CARD_NUMBER)) && (game->topCard.number == move.number)) {
-		return true;
-	}
+	// Mismo numero
+	if (((move.type == CARD_NUMBER) && (game->topCard.type == CARD_NUMBER)) && (game->topCard.number == move.number)) return true;
 
-	if (((move.type != CARD_NUMBER) && (game->topCard.type != CARD_NUMBER)) && (move.type == game->topCard.type)) {
-		return true;
-	}
+	// Mismo tipo
+	if (((move.type != CARD_NUMBER) && (game->topCard.type != CARD_NUMBER)) && (move.type == game->topCard.type)) return true;
 
-	if ((move.type == CARD_DRAW_TWO) && ((move.color == game->topCard.color) || (game->topCard.type == CARD_DRAW_TWO))) {
-		return true;
-	}
+	// Encadenar +2
+	if ((move.type == CARD_DRAW_TWO) && ((move.color == game->topCard.color) || (game->topCard.type == CARD_DRAW_TWO))) return true;
 
-	if ((move.type == CARD_SKIP) && (move.color == game->topCard.color)) {
-		return true;
-	}
+	// Saltar
+	if ((move.type == CARD_SKIP) && (move.color == game->topCard.color)) return true;
 
-	if ((move.type == CARD_REVERSE) && (move.color == game->topCard.color)) {
-		return true;
-	}
+	// Invertir
+	if ((move.type == CARD_REVERSE) && (move.color == game->topCard.color)) return true;
 
 	return false;
 

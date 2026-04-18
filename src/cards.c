@@ -23,7 +23,7 @@ void set_card(Card *card, CardType type, Color color, int number)
  * @param card1 Carta 1
  * @param card2 Carta 2
  */
-static void swap_cards(Card *card1, Card *card2) 
+void swap_cards(Card *card1, Card *card2) 
 {
 	Card temp = *card1;
 	*card1 = *card2;
@@ -36,7 +36,8 @@ static void swap_cards(Card *card1, Card *card2)
  * @param a Slot 1
  * @param b Slot 2
  */
-static void swap_handslots(HandSlot *a, HandSlot *b) {
+void swap_handslots(HandSlot *a, HandSlot *b) 
+{
 	HandSlot temp = *a;
 	*a = *b;
 	*b = temp;
