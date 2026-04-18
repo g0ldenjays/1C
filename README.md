@@ -66,6 +66,7 @@ Proyecto de **UNO en C** para terminal. El repositorio incluye:
 │   ├── game.h
 │   ├── net.h
 │   ├── protocol.h
+│   ├── client_ui.h
 │   └── session.h
 ├── src/
 │   ├── cards.c
@@ -73,6 +74,7 @@ Proyecto de **UNO en C** para terminal. El repositorio incluye:
 │   ├── main.c
 │   ├── net.c
 │   ├── protocol.c
+│   ├── client_ui.c
 │   └── session.c
 ├── build/
 ├── Makefile
