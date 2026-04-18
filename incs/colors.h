@@ -1,5 +1,5 @@
-#ifndef UTILITIES_H
-#define UTILITIES_H
+#ifndef COLORS_H
+#define COLORS_H
 
 #define RESET "\x1b[0m"
 #define DARK_GRAY "\x1b[90m"

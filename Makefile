@@ -10,6 +10,8 @@ SRCS      := $(wildcard $(SRC_DIR)/*.c)
 OBJS      := $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SRCS))
 TARGET    := $(BUILD_DIR)/$(NAME)
 
+IP ?= 127.0.0.1
+
 # Reglas principales
 all: $(TARGET)
 
@@ -24,6 +26,12 @@ $(BUILD_DIR):
 
 run: $(TARGET)
 	./$(TARGET)
+
+unoh: $(TARGET)
+	./$(TARGET) host
+
+unoc: $(TARGET)
+	./$(TARGET) client $(IP)
 
 debug: CFLAGS += $(DEBUGFLAGS)
 debug: fclean all
@@ -46,4 +54,4 @@ help:
 	@echo "  make re     -> recompila desde cero"
 	@echo "  make help   -> muestra esta ayuda"
 
-.PHONY: all run debug clean fclean re help
+.PHONY: all run unoh unoc debug clean fclean re help

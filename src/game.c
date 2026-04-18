@@ -313,7 +313,7 @@ int verify_win(GameState *game)
 	return 0;
 }
 
-bool play_card_logic(GameState *game, int move, HandSlot *currentHand, bool skip)
+bool play_card_logic(GameState *game, int move, HandSlot *currentHand)
 {
 	if (move != 0) {
 		currentHand[move - 1].valid = false;
@@ -341,5 +341,5 @@ bool play_card_logic(GameState *game, int move, HandSlot *currentHand, bool skip
 		}
 	}
 
-	return skip;
+	return false;
 }

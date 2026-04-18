@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
-#include "utilities.h"
+#include "colors.h"
 #include "cards.h"
 
 typedef struct {
@@ -31,6 +31,6 @@ void play_reverse();
 void shuffle_bin(GameState *game);
 void stack_bin(GameState *game);
 void bin_to_deck(GameState *game);
-bool play_card_logic(GameState *game, int move, HandSlot *currentHand, bool skip);
+bool play_card_logic(GameState *game, int move, HandSlot *currentHand);
 
 #endif
